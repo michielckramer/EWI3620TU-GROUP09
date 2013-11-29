@@ -8,6 +8,8 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
+import com.sun.opengl.util.Animator;
+
 public class StartMenu implements GLEventListener, MouseListener,
 		MouseMotionListener {
 
@@ -15,6 +17,7 @@ public class StartMenu implements GLEventListener, MouseListener,
 
 	private int screenWidth;
 	private int screenHeight;
+	private float buttonSize;
 
 	public StartMenu(int a, int b) {
 		this.screenWidth = a;
@@ -26,16 +29,39 @@ public class StartMenu implements GLEventListener, MouseListener,
 			init(drawable);
 			init = false;
 		}
+		screenWidth = MainClass.screenWidth;
+		screenHeight = MainClass.screenHeight;
+
+		buttonSize = screenHeight / 10;
 		GL gl = drawable.getGL();
 		gl.glClearColor(1f, 1f, 1f, 0f);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		// gl.glLoadIdentity();
+		// gl.glBegin(GL.GL_QUADS);
+		// gl.glColor3f(1.0f, 1.0f, 0.0f);
+		// gl.glVertex2f(buttonSize, buttonSize);
+		// gl.glVertex2f(2 * buttonSize, buttonSize);
+		// gl.glVertex2f(2 * buttonSize, 2 * buttonSize);
+		// gl.glVertex2f(buttonSize, 2 * buttonSize);
+		// gl.glEnd();
+		// gl.glDisable(GL.GL_LIGHTING);
+		// gl.glFlush();
+		drawButtons(gl);
+	}
+
+	public void drawButtons(GL gl) {
 		gl.glBegin(GL.GL_QUADS);
-		gl.glColor3f(1.0f, 1.0f, 0.0f);
-		gl.glVertex2f(10, 10);
-		gl.glVertex2f(100, 10);
-		gl.glVertex2f(100, 100);
-		gl.glVertex2f(10, 100);
+		gl.glColor3f(1, 1, 0);
+		gl.glVertex2f(buttonSize, buttonSize);
+		gl.glVertex2f(2 * buttonSize, buttonSize);
+		gl.glVertex2f(2 * buttonSize, 2 * buttonSize);
+		gl.glVertex2f(buttonSize, 2 * buttonSize);
+
+		// gl.glColor3f(1, 0, 1);
+		// gl.glVertex2f(buttonSize, buttonSize);
+		// gl.glVertex2f(2 * buttonSize, buttonSize);
+		// gl.glVertex2f(2 * buttonSize, 2 * buttonSize);
+		// gl.glVertex2f(buttonSize, 2 * buttonSize);
 		gl.glEnd();
 		gl.glDisable(GL.GL_LIGHTING);
 		gl.glFlush();
@@ -46,6 +72,9 @@ public class StartMenu implements GLEventListener, MouseListener,
 		MainClass.canvas.addGLEventListener(this);
 		MainClass.canvas.addMouseMotionListener(this);
 		GL gl = drawable.getGL();
+
+		gl.glDisable(GL.GL_LIGHTING);
+		gl.glDisable(GL.GL_LIGHT0);
 		// Set the matrix mode to GL_PROJECTION, allowing us to manipulate the
 		// projection matrix
 		gl.glMatrixMode(GL.GL_PROJECTION);
@@ -72,6 +101,9 @@ public class StartMenu implements GLEventListener, MouseListener,
 		// We have a simple 2D application, so we do not need to check for depth
 		// when rendering.
 		gl.glDisable(GL.GL_DEPTH_TEST);
+
+		Animator anim = new Animator(MainClass.canvas);
+		anim.start();
 	}
 
 	@Override
@@ -83,7 +115,7 @@ public class StartMenu implements GLEventListener, MouseListener,
 	@Override
 	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3,
 			int arg4) {
-		// TODO Auto-generated method stub
+		MainClass.getRunner().reshape(arg0, arg1, arg2, arg3, arg4);
 
 	}
 
@@ -102,7 +134,6 @@ public class StartMenu implements GLEventListener, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if (MainClass.getManager().getGameState() == 1) {
-			System.out.println("Test");
 			MainClass.getManager().setGameState(2);
 		}
 	}

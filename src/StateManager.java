@@ -22,6 +22,8 @@ public class StateManager implements GLEventListener {
 	public void setGameState(int s) {
 		switch (s) {
 		case 1:
+			MainClass.canvas.removeGLEventListener(this);
+			MainClass.canvas.addGLEventListener(MainClass.getStart());
 			StartMenu.init = true;
 			break;
 		case 2:

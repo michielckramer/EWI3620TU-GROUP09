@@ -28,7 +28,7 @@ import java.util.Iterator;
  * <p>
  * For more information on JOGL, visit <a
  * href="http://jogamp.org/wiki/index.php/Main_Page">this page</a> for general
- * information, and <a
+ * information, and <a>
  * href="https://jogamp.org/deployment/jogamp-next/javadoc/jogl/javadoc/">this
  * page</a> for the specification of the API.
  * 
@@ -45,16 +45,12 @@ public class MazeRunner implements GLEventListener {
 
 	public static boolean init = true;
 
-	private GLCanvas canvas;
-
 	private int screenWidth;
 	private int screenHeight;
-	private float buttonSize;
 
 	private ArrayList<VisibleObject> visibleObjects;
 
 	private static Player player; // The player object.
-	private Guard guard; // The guard object
 	private Camera camera; // The camera object.
 	private UserInput input; // The user input object that controls the player.
 	private Maze maze; // The maze.
@@ -227,7 +223,6 @@ public class MazeRunner implements GLEventListener {
 
 		// Set the shading model.
 		gl.glShadeModel(GL.GL_SMOOTH);
-		reshape(drawable, 0, 0, screenWidth - 1, screenHeight - 1);
 		reshape(drawable, 0, 0, screenWidth, screenHeight);
 
 	}
@@ -303,7 +298,9 @@ public class MazeRunner implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
-		buttonSize = screenHeight / 10.0f;
+		MainClass.screenWidth = width;
+		MainClass.screenHeight = height;
+		MainClass.buttonSize = screenHeight / 10.0f;
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 
 		// Set the new projection matrix.

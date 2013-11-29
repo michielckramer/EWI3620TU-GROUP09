@@ -29,6 +29,7 @@ import com.sun.opengl.util.texture.TextureIO;
 public class MainClass extends Frame implements GLEventListener, MouseListener {
 	public static int screenHeight;
 	public static int screenWidth;
+	public static float buttonSize;
 	public static GLCanvas canvas;
 
 	private static MazeRunner runner;
@@ -67,9 +68,10 @@ public class MainClass extends Frame implements GLEventListener, MouseListener {
 		add(canvas);
 		canvas.addMouseListener(this);
 		setVisible(true);
+		setResizable(false);
 		setRunner(new MazeRunner(screenWidth, screenHeight));
-		start = new StartMenu(screenWidth, screenHeight);
-		setManager(new StateManager(2));
+		setStart(new StartMenu(screenWidth, screenHeight));
+		setManager(new StateManager(1));
 		// canvas.addGLEventListener(runner);
 		canvas.addGLEventListener(this);
 		initJOGL();
@@ -124,7 +126,7 @@ public class MainClass extends Frame implements GLEventListener, MouseListener {
 		int n = getManager().getGameState();
 		switch (n) {
 		case 1:
-			start.display(arg0);
+			getStart().display(arg0);
 			break;
 		case 2:
 			getRunner().display(arg0);
@@ -203,5 +205,13 @@ public class MainClass extends Frame implements GLEventListener, MouseListener {
 
 	public static void setManager(StateManager manager) {
 		MainClass.manager = manager;
+	}
+
+	public static StartMenu getStart() {
+		return start;
+	}
+
+	public static void setStart(StartMenu start) {
+		MainClass.start = start;
 	}
 }

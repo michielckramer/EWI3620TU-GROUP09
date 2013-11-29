@@ -1,63 +1,60 @@
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 
-public class StateManager {
-	private static int screenHeight;
-	private static int screenWidth;
-
-	public static boolean s1 = false;
-	public static boolean s2 = false;
-	public static boolean s3 = false;
+public class StateManager implements GLEventListener {
+	private int screenHeight;
+	private int screenWidth;
 
 	/*
 	 * States: 1 = Startmenu, 2 = Running, 3 = Pause
 	 */
-	private static int gamestate = 2;
+	private int gamestate;
 
-	public static int getGameState() {
-		return gamestate;
+	public StateManager(int n) {
+		this.gamestate = n;
 	}
 
-	public static void setGameState(int s) {
+	public int getGameState() {
+		return this.gamestate;
+	}
+
+	public void setGameState(int s) {
 		switch (s) {
 		case 1:
-			s1 = true;
+			StartMenu.init = true;
 			break;
 		case 2:
-			s2 = true;
-			break;
-		case 3:
-			s3 = true;
+			MainClass.canvas.removeGLEventListener(this);
+			MainClass.canvas.addGLEventListener(MainClass.getRunner());
+			MazeRunner.init = true;
 			break;
 		}
 		gamestate = s;
 	}
 
-	public static boolean getPause() {
-		return gamestate == 3;
+	@Override
+	public void display(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
-	public static void setPause() {
-		gamestate = 3;
+	@Override
+	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
+		// TODO Auto-generated method stub
+
 	}
 
-	public static void resume() {
-		setGameState(2);
+	@Override
+	public void init(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
-	public static int getScreenHeight() {
-		return screenHeight;
-	}
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3,
+			int arg4) {
+		// TODO Auto-generated method stub
 
-	public static void setScreenHeight(int Height) {
-		screenHeight = Height;
-	}
-
-	public static int getScreenWidth() {
-		return screenWidth;
-	}
-
-	public static void setScreenWidth(int Width) {
-		screenWidth = Width;
 	}
 }

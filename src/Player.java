@@ -46,7 +46,7 @@ public class Player extends GameObject {
 		super(x, y, z);
 		horAngle = h;
 		verAngle = v;
-		speed = 0.01;
+		speed = 0.02;
 	}
 
 	/**

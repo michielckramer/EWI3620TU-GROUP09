@@ -29,12 +29,13 @@ public class Maze implements VisibleObject {
 	public static final double MAZE_SIZE = 10;
 	public static final double SQUARE_SIZE = 10;
 	private static Texture texture;
+	private static Texture muur;
 
 	public static int[][] maze = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 1, 0, 1 },
-			{ 1, 0, 1, 1, 0, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 0, 1, 1, 0, 1, 1 },
-			{ 1, 1, 1, 0, 1, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 0, 1, 1 },
-			{ 1, 0, 1, 1, 1, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 1, 1, 0, 1 },
+			{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+			{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+			{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+			{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
 	public static double getSquare() {
@@ -105,7 +106,7 @@ public class Maze implements VisibleObject {
 		GLUT glut = new GLUT();
 
 		// Setting the wall colour and material.
-		float wallColour[] = { 0.5f, 0.0f, 0.7f, 1.0f }; // The walls are
+		float wallColour[] = { 0.5f, 0.9f, 1.0f, 1.0f }; // The walls are
 															// purple.
 
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the
@@ -116,12 +117,20 @@ public class Maze implements VisibleObject {
 		// draw the grid with the current material
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
-				gl.glPushMatrix();
-				gl.glTranslated(i * SQUARE_SIZE + SQUARE_SIZE / 2,
-						SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2);
-				if (isWall(i, j))
-					glut.glutSolidCube((float) SQUARE_SIZE);
-				gl.glPopMatrix();
+				// gl.glPushMatrix();
+				if (isWall(i, j)) {
+					// drawCube(gl, i, j);
+					int ssize = (int) SQUARE_SIZE;
+					// paintWallTile1(gl, i * ssize, 0, j * ssize);
+					// paintWallTile(gl, i * ssize, 0, j * ssize);
+					// paintWallTile1(gl, i * ssize, 0, j * ssize);
+					paintWallTile1(gl, i * ssize, 0, j * ssize);
+					paintWallTile2(gl, i * ssize, 0, j * ssize);
+					paintWallTile3(gl, i * ssize, 0, j * ssize);
+					paintWallTile4(gl, i * ssize, 0, j * ssize);
+					// paintWall(gl, 0, 20, 20, 20);
+					// gl.glPopMatrix();
+				}
 			}
 		}
 		paintSingleFloorTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the floor.
@@ -140,27 +149,31 @@ public class Maze implements VisibleObject {
 	 */
 
 	private void paintSingleCeilingTile(GL gl, double size) {
-		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(0, SQUARE_SIZE, 0);
+		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3d(size, SQUARE_SIZE, 0);
+		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3d(size, SQUARE_SIZE, size);
+		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3d(0, SQUARE_SIZE, size);
+		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glEnd();
 	}
 
 	private void paintSingleFloorTile(GL gl, double size) {
 		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
-		gl.glEnable(GL.GL_TEXTURE_2D);
 
-		if (texture == null) {
-			texture = MazeRunner
-					.loadTexture("C://Users/Michiel/Documents/GitHub/EWI3620TU-GROUP9/Textures/muur2.jpg");
-		}
-		texture.bind();
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
 
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
@@ -175,4 +188,176 @@ public class Maze implements VisibleObject {
 		gl.glEnd();
 
 	}
+
+	@SuppressWarnings("unused")
+	private void drawCube(GL gl, int i, int j) {
+		int x1 = i * (int) SQUARE_SIZE - (int) SQUARE_SIZE;
+		int x2 = i * (int) SQUARE_SIZE + (int) SQUARE_SIZE;
+		int z1 = j * (int) SQUARE_SIZE - (int) SQUARE_SIZE;
+		int z2 = j * (int) SQUARE_SIZE + (int) SQUARE_SIZE;
+
+		paintWall(gl, x1, x2, z1, z2);
+
+	}
+
+	private void paintWall(GL gl, int x1, int x2, int z1, int z2) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+
+		gl.glVertex3d(x1, 0, z1);
+		gl.glTexCoord2f(0.0f, 0.0f);
+
+		gl.glVertex3d(x1, SQUARE_SIZE, z1);
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glVertex3d(x2, 0, z2);
+		gl.glTexCoord2f(1.0f, 1.0f);
+
+		gl.glVertex3d(x2, SQUARE_SIZE, z2);
+		gl.glTexCoord2f(1.0f, 0.0f);
+		gl.glEnd();
+	}
+
+	private void paintWallTile(GL gl, int x, int y, int z) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		// 1
+		gl.glVertex3d(x, y, z);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		// 2
+		gl.glVertex3d(x, y + SQUARE_SIZE, z);
+		gl.glTexCoord2f(1.0f, 0.0f);
+		// 3
+		gl.glVertex3d(x + SQUARE_SIZE, y + SQUARE_SIZE, z);
+		gl.glTexCoord2f(1.0f, 1.0f);
+		// 4
+		gl.glVertex3d(x + SQUARE_SIZE, y, z);
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glEnd();
+	}
+
+	private void paintWallTile1(GL gl, int x, int y, int z) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		// 1
+		gl.glVertex3d(x + SQUARE_SIZE, y + SQUARE_SIZE, z);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		// 2
+		gl.glVertex3d(x + SQUARE_SIZE, y, z);
+		gl.glTexCoord2f(1.0f, 0.0f);
+		// 3
+		gl.glVertex3d(x, y, z);
+
+		gl.glTexCoord2f(1.0f, 1.0f);
+		// 4
+		gl.glVertex3d(x, y + SQUARE_SIZE, z);
+
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glEnd();
+	}
+
+	private void paintWallTile2(GL gl, int x, int y, int z) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		// 1
+		gl.glVertex3d(x, y + SQUARE_SIZE, z + SQUARE_SIZE);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		// 2
+		gl.glVertex3d(x, y, z + SQUARE_SIZE);
+		gl.glTexCoord2f(1.0f, 0.0f);
+		// 3
+		gl.glVertex3d(x + SQUARE_SIZE, y, z + SQUARE_SIZE);
+
+		gl.glTexCoord2f(1.0f, 1.0f);
+		// 4
+		gl.glVertex3d(x + SQUARE_SIZE, y + SQUARE_SIZE, z + SQUARE_SIZE);
+		gl.glVertex3d(x, y + SQUARE_SIZE, z + SQUARE_SIZE);
+
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glEnd();
+	}
+
+	private void paintWallTile3(GL gl, int x, int y, int z) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		// 1
+		gl.glVertex3d(x, y + SQUARE_SIZE, z);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		// 2
+		gl.glVertex3d(x, y, z);
+
+		gl.glTexCoord2f(1.0f, 0.0f);
+		// 3
+		gl.glVertex3d(x, y, z + SQUARE_SIZE);
+
+		gl.glTexCoord2f(1.0f, 1.0f);
+		// 4
+		gl.glVertex3d(x, y + SQUARE_SIZE, z + SQUARE_SIZE);
+
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glEnd();
+	}
+
+	private void paintWallTile4(GL gl, int x, int y, int z) {
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+
+		gl.glEnable(GL.GL_TEXTURE_2D);
+		MainClass.getTexture("muur").bind();
+
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		// 1
+		gl.glVertex3d(x + SQUARE_SIZE, y + SQUARE_SIZE, z + SQUARE_SIZE);
+		gl.glTexCoord2f(0.0f, 0.0f);
+		// 2
+		gl.glVertex3d(x + SQUARE_SIZE, y, z + SQUARE_SIZE);
+
+		gl.glTexCoord2f(1.0f, 0.0f);
+		// 3
+		gl.glVertex3d(x + SQUARE_SIZE, y, z);
+
+		gl.glTexCoord2f(1.0f, 1.0f);
+		// 4
+		gl.glVertex3d(x + SQUARE_SIZE, y + SQUARE_SIZE, z);
+
+		gl.glTexCoord2f(0.0f, 1.0f);
+
+		gl.glEnd();
+	}
+
 }

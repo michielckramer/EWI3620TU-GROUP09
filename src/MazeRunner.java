@@ -36,7 +36,6 @@ import java.util.Iterator;
  * 
  */
 public class MazeRunner implements GLEventListener {
-	public static Texture muur1;
 
 	/*
 	 * States: 1 = Startmenu, 2 = Running, 3 = Pause
@@ -44,7 +43,7 @@ public class MazeRunner implements GLEventListener {
 
 	private static boolean collision = true;
 
-	public boolean init = true;
+	public static boolean init = true;
 
 	private GLCanvas canvas;
 
@@ -88,7 +87,7 @@ public class MazeRunner implements GLEventListener {
 	public MazeRunner(int a, int b) {
 		this.screenWidth = a;
 		this.screenHeight = b;
-		initJOGL();
+		// initJOGL();
 		initObjects();
 	}
 
@@ -161,6 +160,27 @@ public class MazeRunner implements GLEventListener {
 
 		input = new UserInput(MainClass.canvas);
 		player.setControl(input);
+
+		Guard guard1 = new Guard(15, 5, 15);
+
+		Point p1 = new Point(15, 15);
+		Point p2 = new Point(85, 15);
+		Point p3 = new Point(85, 85);
+		Point p4 = new Point(15, 85);
+
+		ArrayList<Point> route = new ArrayList<Point>();
+		route.add(p1);
+		route.add(p2);
+		route.add(p3);
+		route.add(p4);
+		route.add(p1);
+
+		guard1.setRoute(route);
+
+		// visibleObjects.add(guard1);
+
+		Items item = new Items(55, 5, 55, 1);
+		visibleObjects.add(item);
 	}
 
 	/**
@@ -175,7 +195,6 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	public void init(GLAutoDrawable drawable) {
-		System.out.println("init");
 		drawable.setGL(new DebugGL(drawable.getGL())); // We set the OpenGL
 		// pipeline to Debugging
 		// mode.
@@ -228,7 +247,6 @@ public class MazeRunner implements GLEventListener {
 			init(drawable);
 			init = false;
 		}
-		// System.out.println("test");
 		GL gl = drawable.getGL();
 		gl.glEnable(GL.GL_LIGHTING);
 		// Calculating time since last frame.
@@ -266,7 +284,6 @@ public class MazeRunner implements GLEventListener {
 	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
 			boolean deviceChanged) {
-		// GL gl = drawable.getGL();
 	}
 
 	/**
@@ -284,8 +301,6 @@ public class MazeRunner implements GLEventListener {
 		GLU glu = new GLU();
 
 		// Setting the new screen size and adjusting the viewport.
-		StateManager.setScreenWidth(width);
-		StateManager.setScreenHeight(height);
 		screenWidth = width;
 		screenHeight = height;
 		buttonSize = screenHeight / 10.0f;
@@ -336,17 +351,7 @@ public class MazeRunner implements GLEventListener {
 		camera.calculateVRP();
 	}
 
-	public static Texture loadTexture(String a) {
-		try {
-			File f = new File(a);
-			TextureData data = TextureIO.newTextureData(f, false, "jpg");
-			muur1 = TextureIO.newTexture(data);
-			// muur1.getHeight();
-		} catch (FileNotFoundException e) {
-			System.err.println("FileNotFoundException: " + e.getMessage());
-		} catch (IOException e) {
-			System.err.println("Caught IOException: " + e.getMessage());
-		}
-		return muur1;
+	public static Player getPlayer() {
+		return player;
 	}
 }

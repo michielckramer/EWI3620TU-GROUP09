@@ -1,18 +1,32 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 
-public class StartMenu implements ActionListener {
+public class StartMenu implements GLEventListener, MouseListener,
+		MouseMotionListener {
 
-	private static int width;
-	private static int height;
+	public static boolean init = true;
 
-	public static void display(GL gl) {
-		width = StateManager.getScreenWidth();
-		height = StateManager.getScreenHeight();
-		init(gl);
+	private int screenWidth;
+	private int screenHeight;
+
+	public StartMenu(int a, int b) {
+		this.screenWidth = a;
+		this.screenHeight = b;
+	}
+
+	public void display(GLAutoDrawable drawable) {
+		if (init) {
+			init(drawable);
+			init = false;
+		}
+		GL gl = drawable.getGL();
 		gl.glClearColor(1f, 1f, 1f, 0f);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		// gl.glLoadIdentity();
@@ -27,7 +41,11 @@ public class StartMenu implements ActionListener {
 		gl.glFlush();
 	}
 
-	public static void init(GL gl) {
+	public void init(GLAutoDrawable drawable) {
+		MainClass.canvas.addMouseListener(this);
+		MainClass.canvas.addGLEventListener(this);
+		MainClass.canvas.addMouseMotionListener(this);
+		GL gl = drawable.getGL();
 		// Set the matrix mode to GL_PROJECTION, allowing us to manipulate the
 		// projection matrix
 		gl.glMatrixMode(GL.GL_PROJECTION);
@@ -41,7 +59,7 @@ public class StartMenu implements ActionListener {
 		 * active matrix. In this case, a simple 2D projection is performed,
 		 * matching the viewing frustum to the screen size.
 		 */
-		gl.glOrtho(0, width, 0, height, -1, 1);
+		gl.glOrtho(0, this.screenWidth, 0, this.screenHeight, -1, 1);
 
 		// Set the matrix mode to GL_MODELVIEW, allowing us to manipulate the
 		// model-view matrix.
@@ -57,6 +75,59 @@ public class StartMenu implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void displayChanged(GLAutoDrawable arg0, boolean arg1, boolean arg2) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3,
+			int arg4) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		if (MainClass.getManager().getGameState() == 1) {
+			System.out.println("Test");
+			MainClass.getManager().setGameState(2);
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 }
